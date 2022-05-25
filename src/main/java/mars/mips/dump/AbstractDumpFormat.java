@@ -4,6 +4,7 @@
    import java.io.*;
 /*
 Copyright (c) 2003-2008,  Pete Sanderson and Kenneth Vollmar
+Modified work copyright (c) 2022 Trust_04zh
 
 Developed by Pete Sanderson (psanderson@otterbein.edu)
 and Kenneth Vollmar (kenvollmar@missouristate.edu)
@@ -109,10 +110,12 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
    *  must be on word boundary.
    *  @param lastAddress last (highest) memory address to dump.  In bytes but
    *  must be on word boundary.  Will dump the word that starts at this address.
+   *  @param paddingToLength padding zero to dumped data to specified byte length,
+   *  currently only useful in dumping coe, -1 if unspecified or useless in the dump format.
    *  @throws AddressErrorException if firstAddress is invalid or not on a word boundary.
    *  @throws IOException if error occurs during file output.
    */
-       public abstract void dumpMemoryRange(File file, int firstAddress, int lastAddress)
+       public abstract void dumpMemoryRange(File file, int firstAddress, int lastAddress, int paddingToLength)
 		    throws AddressErrorException, IOException;
    
    }

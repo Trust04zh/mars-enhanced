@@ -8,6 +8,11 @@
     <artifactId>mars-enhanced</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+<!--        <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>-->
+    </properties>
+
     <build>
         <resources>
             <resource>
@@ -32,6 +37,14 @@
                             <mainClass>Mars</mainClass>
                         </manifest>
                     </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
                 </configuration>
             </plugin>
         </plugins>

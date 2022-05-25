@@ -13,6 +13,7 @@
 	
 	/*
 Copyright (c) 2003-2008,  Pete Sanderson and Kenneth Vollmar
+Modified work copyright (c) 2022 Trust_04zh
 
 Developed by Pete Sanderson (psanderson@otterbein.edu)
 and Kenneth Vollmar (kenvollmar@missouristate.edu)
@@ -247,7 +248,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             }
             if (operationOK) {
                try {
-                  format.dumpMemoryRange(theFile, firstAddress, lastAddress);
+                  format.dumpMemoryRange(theFile, firstAddress, lastAddress, 0); // FIXME: add vector length support for GUI approach
                } 
                    catch (AddressErrorException aee) {
                   
