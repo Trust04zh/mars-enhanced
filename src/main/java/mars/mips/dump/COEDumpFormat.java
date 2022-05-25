@@ -40,6 +40,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 public class COEDumpFormat extends AbstractDumpFormat {
 
+    public static final String[] supportedDumpPaddingToLengthList = new String[] {
+            "4K", "8K", "16K", "32K", "64K", "128K",
+    };
+    public static final String DEFAULT_VECTOR_LENGTH_STR = "64K";
+
     private final String MEMORY_INITIALIZATION_RADIX_HEX_IMPLEMENTATION = "memory_initialization_radix=16;";
     private final String MEMORY_INITIALIZATION_VECTOR_PREFIX = "memory_initialization_vector=";
     private final String MEMORY_PADDING_ZERO = "00000000";
@@ -100,6 +105,15 @@ public class COEDumpFormat extends AbstractDumpFormat {
         finally {
             out.close();
         }
+    }
+
+    public static int dumpPaddingTolengthStr2Int(String paddingToLength) {
+        for (String length : supportedDumpPaddingToLengthList) {
+            if (length.equals(paddingToLength)) {
+                return Integer.parseInt(length.substring(0, length.length() - 1)) << 10;
+            }
+        }
+        return -1;
     }
 
 }

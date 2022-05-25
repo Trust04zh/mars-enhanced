@@ -9,6 +9,9 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.JOptionPane;   // KENV 9/8/2004
 
+import static mars.mips.dump.COEDumpFormat.dumpPaddingTolengthStr2Int;
+import static mars.mips.dump.COEDumpFormat.supportedDumpPaddingToLengthList;
+
 /*
 Copyright (c) 2003-2012,  Pete Sanderson and Kenneth Vollmar
 Modified work copyright (c) 2022 Trust_04zh
@@ -123,9 +126,6 @@ public class MarsLaunch {
    private int instructionCount;
    private PrintStream out; // stream for display of command line output
    private ArrayList dumpTriples = null; // each element holds 3 arguments for dump option
-   private final String[] supportedPaddingToLengthList = new String[] {
-           "4K", "8K", "16K", "32K", "64K", "128K",
-   };
    private ArrayList<Integer> dumpPaddingToLengths = new ArrayList<>();
    private ArrayList programArgumentList; // optional program args for MIPS program (becomes argc, argv)
    private int assembleErrorExitCode;  // MARS command exit code to return if assemble error occurs
@@ -322,15 +322,14 @@ public class MarsLaunch {
                out.println("pl option should follow a dump option");
                argsOK = false;
             } else {
-               String paddingToLength = args[++i];
-               for (String length : supportedPaddingToLengthList) {
-                  if (length.equals(paddingToLength)) {
-                     dumpPaddingToLengths.set(dumpTriples.size() - 1,
-                             Integer.parseInt(length.substring(0, length.length() - 1)) << 10);
+               String paddingToLengthStr = args[++i];
+               for (String length : supportedDumpPaddingToLengthList) {
+                  if (length.equals(paddingToLengthStr)) {
+                     dumpPaddingToLengths.set(dumpTriples.size() - 1, dumpPaddingTolengthStr2Int(paddingToLengthStr));
                   }
                }
                if (dumpPaddingToLengths.get(dumpTriples.size() - 1) == -1) {
-                  out.println("Unsupported length " + paddingToLength + " to padding to, use default length instead");
+                  out.println("Unsupported length " + paddingToLengthStr + " to pad to, use default length instead");
                }
             }
             continue;
@@ -810,7 +809,7 @@ public class MarsLaunch {
             formats += ", ";
          }
       }
-      String paddingToLengths = String.join(", ", supportedPaddingToLengthList);
+      String paddingToLengths = String.join(", ", supportedDumpPaddingToLengthList);
       out.println("Usage:  Mars  [options] filename [additional filenames]");
       out.println("  Valid options (not case sensitive, separate by spaces) are:");
       out.println("      a  -- assemble only, do not simulate");

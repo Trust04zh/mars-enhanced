@@ -22,7 +22,7 @@ $ java -jar Mars.jar to_dump.asm a dump .text COE text.coe pl 64K dump .data COE
 Work list:
 
 - [x] add CLI support for dumping coe file
-- [] add GUI support for dumping coe file
+- [x] add GUI support for dumping coe file
 - [] add drag-and-drop support for opening assembly file(s)
 - [] add modern themes (java swing look and feel)
 - [] support stopping endless loop

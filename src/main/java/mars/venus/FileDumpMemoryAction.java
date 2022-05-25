@@ -10,6 +10,8 @@
    import java.io.*;
    import java.util.*;
    import javax.swing.plaf.basic.*;
+
+   import static mars.mips.dump.COEDumpFormat.*;
 	
 	/*
 Copyright (c) 2003-2008,  Pete Sanderson and Kenneth Vollmar
@@ -60,6 +62,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
    	 
       private JComboBox segmentListSelector;
       private JComboBox formatListSelector;
+      private JComboBox paddingToLengthListSelector;
        public FileDumpMemoryAction(String name, Icon icon, String descrip,
                              Integer mnemonic, KeyStroke accel, VenusUI gui) {
          super(name, icon, descrip, mnemonic, accel, gui);
@@ -172,17 +175,42 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
          segmentPanel.add(new Label("Memory Segment"), BorderLayout.NORTH);
          segmentPanel.add(segmentListSelector);
          contents.add(segmentPanel, BorderLayout.WEST);
-      	
+
          // Next, create list of all available dump formats.
          ArrayList dumpFormats = (new DumpFormatLoader()).loadDumpFormats();
          formatListSelector = new JComboBox(dumpFormats.toArray());
          formatListSelector.setRenderer(new DumpFormatComboBoxRenderer(formatListSelector));
-         formatListSelector.setSelectedIndex(0);  
+         formatListSelector.setSelectedIndex(0);
          JPanel formatPanel = new JPanel(new BorderLayout());
          formatPanel.add(new Label("Dump Format"), BorderLayout.NORTH);
          formatPanel.add(formatListSelector);
-         contents.add(formatPanel, BorderLayout.EAST);
-      
+         contents.add(formatPanel, BorderLayout.CENTER);
+
+         // create list of available lengths to pad to
+         paddingToLengthListSelector = new JComboBox(supportedDumpPaddingToLengthList);
+         paddingToLengthListSelector.setSelectedItem(DEFAULT_VECTOR_LENGTH_STR);
+         paddingToLengthListSelector.setEnabled(false); // disabled by default since dump format is not COE by default
+         JPanel paddingToLengthPanel = new JPanel(new BorderLayout());
+         paddingToLengthPanel.add(new Label("Length to pad to"), BorderLayout.NORTH);
+         paddingToLengthPanel.add(paddingToLengthListSelector);
+         contents.add(paddingToLengthPanel, BorderLayout.EAST);
+
+         formatListSelector.addItemListener(new ItemListener() {
+             @Override
+             public void itemStateChanged(ItemEvent e) {
+                 System.out.println(e.getItem());
+                 System.out.println(e.getItem().getClass());
+                 System.out.println(e.getStateChange());
+                 if (e.getStateChange() == ItemEvent.SELECTED) {
+                     if (e.getItem() instanceof COEDumpFormat) {
+                         paddingToLengthListSelector.setEnabled(true);
+                     } else if (!(e.getItem() instanceof COEDumpFormat)) {
+                         paddingToLengthListSelector.setEnabled(false);
+                     }
+                 }
+             }
+         });
+
       	// Bottom row - the control buttons for Dump and Cancel
          Box controlPanel = Box.createHorizontalBox();
          JButton dumpButton = new JButton("Dump To File...");
@@ -191,7 +219,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                    public void actionPerformed(ActionEvent e) {
                      if (performDump(segmentListBaseArray[segmentListSelector.getSelectedIndex()], 
                                  segmentListHighArray[segmentListSelector.getSelectedIndex()], 
-                        			(DumpFormat)formatListSelector.getSelectedItem())) {
+                        			(DumpFormat)formatListSelector.getSelectedItem(),
+                             dumpPaddingTolengthStr2Int((String)paddingToLengthListSelector.getSelectedItem()))) {
                         closeDialog();
                      }
                   }
@@ -214,7 +243,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
    	
    	// User has clicked "Dump" button, so launch a file chooser then get
    	// segment (memory range) and format selections and save to the file.
-       private boolean performDump(int firstAddress, int lastAddress, DumpFormat format) {	
+       private boolean performDump(int firstAddress, int lastAddress, DumpFormat format, int paddingToLength) {
          File theFile = null;
          JFileChooser saveDialog = null;
          boolean operationOK = false;
@@ -248,7 +277,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             }
             if (operationOK) {
                try {
-                  format.dumpMemoryRange(theFile, firstAddress, lastAddress, 0); // FIXME: add vector length support for GUI approach
+                  format.dumpMemoryRange(theFile, firstAddress, lastAddress, paddingToLength);
                } 
                    catch (AddressErrorException aee) {
                   
