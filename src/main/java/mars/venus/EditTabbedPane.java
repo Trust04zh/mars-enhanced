@@ -103,8 +103,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                                  skippedDroppedFiles.add(file.getCanonicalPath());
                              }
                          }
-                         JOptionPane.showMessageDialog(null,
-                                 String.join("\n", skippedDroppedFiles), "Skipped", JOptionPane.WARNING_MESSAGE);
+                         if (skippedDroppedFiles.size() > 0) {
+                             JOptionPane.showMessageDialog(null,
+                                     String.join("\n", skippedDroppedFiles), "Skipped", JOptionPane.WARNING_MESSAGE);
+                         }
                      } catch (UnsupportedFlavorException | IOException ex) {
                          ex.printStackTrace();
                      }
