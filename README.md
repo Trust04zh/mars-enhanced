@@ -8,7 +8,7 @@ This project uses java 8 by default, you can modify `pom.xml` and build your own
 
 Manual build (jarfile)
 ```bash
-$ mvn package
+$ mvn clean compile assembly:single
 ```
 
 ## Usage
