@@ -1,6 +1,7 @@
 
 /*
 Copyright (c) 2003-2006,  Pete Sanderson and Kenneth Vollmar
+Modified work copyright (c) 2022 Trust_04zh
 
 Developed by Pete Sanderson (psanderson@otterbein.edu)
 and Kenneth Vollmar (kenvollmar@missouristate.edu)
@@ -27,6 +28,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (MIT license, http://www.opensource.org/licenses/mit-license.html)
  */
 
+import com.formdev.flatlaf.FlatIntelliJLaf;
+
+import javax.swing.*;
+
+
 /**
  * Portal to Mars
  * 
@@ -36,7 +42,15 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     public class Mars {
        public static void main(String[] args) {
-         new mars.MarsLaunch(args);
+           LookAndFeel defaultLookAndFeel = UIManager.getLookAndFeel();
+           if (!FlatIntelliJLaf.setup()) {
+               try {
+                   UIManager.setLookAndFeel(defaultLookAndFeel);
+               } catch (UnsupportedLookAndFeelException e) {
+                   e.printStackTrace();
+               }
+           }
+           new mars.MarsLaunch(args);
       }
    } 
 
