@@ -83,8 +83,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             this.sourceCode = new JEditBasedTextArea(this, lineNumbers);
          }
       	// sourceCode is responsible for its own scrolling
-         this.add(this.sourceCode.getOuterComponent(), BorderLayout.CENTER);      	
-      	
+         this.add(this.sourceCode.getOuterComponent(), BorderLayout.CENTER);
+
       	// If source code is modified, will set flag to trigger/request file save.
          sourceCode.getDocument().addDocumentListener(
                new DocumentListener() {
@@ -267,7 +267,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
    	 *  Set the editing status for this EditPane's associated document.
    	 *  For the argument, use one of the constants from class FileStatus.
    	 *  
-   	 * @param FileStatus the status constant from class FileStatus
+   	 * @param fileStatus the status constant from class FileStatus
    	 */   
       public void setFileStatus(int fileStatus) {
          this.fileStatus.setFileStatus(fileStatus);
@@ -428,7 +428,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
    	/**
    	 *  enable or disable checkbox that controls display of line numbers 
    	 *
-   	 *  @param enable True to enable box, false to disable.
+   	 *  @param enabled True to enable box, false to disable.
    	 */   	 
       public void setShowLineNumbersEnabled(boolean enabled) {
          showLineNumbers.setEnabled(enabled);

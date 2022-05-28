@@ -5,12 +5,18 @@
    import javax.swing.*;
    import javax.swing.event.*;
    import java.awt.*;
+   import java.awt.datatransfer.DataFlavor;
+   import java.awt.datatransfer.UnsupportedFlavorException;
+   import java.awt.dnd.DnDConstants;
+   import java.awt.dnd.DropTarget;
+   import java.awt.dnd.DropTargetDropEvent;
    import java.awt.event.*;
    import javax.swing.undo.*;
    import java.text.*;
    import java.util.*;
    import java.io.*;
    import java.beans.PropertyChangeListener;
+   import java.util.List;
    import javax.swing.filechooser.FileFilter;
 		
 	/*
@@ -82,7 +88,32 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         editPane.tellEditingComponentToRequestFocusInWindow();
                      }
                   }
-               });	
+               });
+         this.setDropTarget(new DropTarget() {
+             @Override
+             public synchronized void drop(DropTargetDropEvent e) {
+                 if (e.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+                     e.acceptDrop(DnDConstants.ACTION_COPY);
+                     try {
+                         List<File> droppedFiles =
+                                 (List<File>) e.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
+                         List<String> skippedDroppedFiles = new ArrayList<>();
+                         for (File file : droppedFiles) {
+                             if (!openFile(file)) {
+                                 skippedDroppedFiles.add(file.getCanonicalPath());
+                             }
+                         }
+                         JOptionPane.showMessageDialog(null,
+                                 String.join("\n", skippedDroppedFiles), "Skipped", JOptionPane.WARNING_MESSAGE);
+                     } catch (UnsupportedFlavorException | IOException ex) {
+                         ex.printStackTrace();
+                     }
+                 } else {
+                     JOptionPane.showMessageDialog(null,
+                             "Please make sure that all dragged-in items are files");
+                 }
+             }
+         });
       }
    	
    	/**

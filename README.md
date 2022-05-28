@@ -23,7 +23,7 @@ Work list:
 
 - [x] add CLI support for dumping coe file
 - [x] add GUI support for dumping coe file
-- [] add drag-and-drop support for opening assembly file(s)
+- [x] add drag-and-drop support for opening assembly files
 - [x] change to modern theme (java swing look and feel)
 - [] support stopping endless loop
 
